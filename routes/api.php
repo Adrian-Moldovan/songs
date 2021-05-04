@@ -3,7 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\GenreController;
+use App\Http\Controllers\SongController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +19,31 @@ use App\Http\Controllers\ArtistController;
 |
 */
 
-Route::resource('artists', ArtistController::class);
+Route::get('/test', function(){
+    echo 'OK';
+});
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::get('/genres', [GenreController::class, 'index']);
+Route::get('/genres/{genre}', [GenreController::class, 'show']);
+Route::get('/genre/songs/{genreId}', [GenreController::class, 'showGenreSongs']);
+
+Route::get('/artists', [ArtistController::class, 'index']);
+Route::get('/artists/{artist}', [ArtistController::class, 'show']);
+
+Route::get('/songs', [SongController::class, 'index']);
+Route::get('/songs/{song}', [SongController::class, 'show']);
+
+// authenticated routes
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    // genres
+    Route::post('/genres', [GenreController::class, 'store']);
+    Route::put('/genres/{genre}', [GenreController::class, 'update']);
+
+    // Route::resource('songs', SongController::class);
+
+    // Route::resource('artists', ArtistController::class);
+
 });

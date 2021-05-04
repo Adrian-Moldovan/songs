@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Artist;
-use App\Http\Requests\ArtistStoreRequest;
+use App\Http\Requests\SongStoreRequest;
+use App\Models\Song;
 
-class ArtistController extends Controller
+class SongController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,56 +15,57 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        return Artist::all();
+        return Song::all();
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\SongStoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ArtistStoreRequest $request)
+    public function store(SongStoreRequest $request)
     {
         $validated = $request->validated();
-        return Artist::create($validated);
+        return Song::create($validated);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  App\Models\Artist  $artist
+     * @param  $song \App\Models\Song
      * @return \Illuminate\Http\Response
      */
-    public function show(Artist $artist)
+    public function show(Song $song)
     {
-        return $artist
-            ->with('songs')
-            ->find($artist->id);
+        return $song
+                ->with('genre')
+                ->with('artists')
+                ->find($song->id);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\ArtistStoreRequest $request
-     * @param  App\Models\Artist $artist
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Song
      * @return \Illuminate\Http\Response
      */
-    public function update(ArtistStoreRequest $request, Artist $artist)
+    public function update(SongStoreRequest $request, Song $song)
     {
         $validated = $request->validated();
-        $artist->update($validated);
-        return $artist;
+        $song->update($validated);
+        return $song;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  App\Models\Artist $artist
+     * @param  \App\Models\Song
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Artist $artist)
+    public function destroy(Song $song)
     {
-        return $artist->delete();
+        $song->delete();
     }
 }
